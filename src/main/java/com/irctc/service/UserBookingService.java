@@ -3,12 +3,14 @@ package com.irctc.service;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.irctc.entities.User;
+import com.irctc.util.UserServiceUtil;
 
 public class UserBookingService {
 
@@ -26,7 +28,10 @@ public class UserBookingService {
 		userList = objectMapper.readValue(users, new TypeReference<List<User>>() {});
 	}
 	
-//	public Boolean loginUser() {
-//		userList.stream().filter(null)
-//	}
+	public Boolean loginUser() {
+		Optional<User> foundUser = userList.stream().filter(user1 -> {
+			return user1.getName().equalsIgnoreCase(user.getName()) && UserServiceUtil.checkPassword(user.getPassword(), user1.getHashedPassword());
+		}).findFirst();
+		return foundUser.isPresent();
+	}
 }
